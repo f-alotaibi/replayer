@@ -1,0 +1,6 @@
+[submodule "external/obs-studio"]
+	path = external/obs-studio
+	url = https://github.com/obsproject/obs-studio.git
+[submodule "external/libuiohook"]
+	path = external/libuiohook
+	url = https://github.com/kwhat/libuiohook.git
