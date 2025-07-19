@@ -1,5 +1,5 @@
 $OBSDir = Resolve-Path "obs-studio"
-rmdir ./build-windows/
+rmdir -Force -Recurse ./build-windows/
 Set-Location $OBSDir
 
 $Flags = @(
