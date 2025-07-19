@@ -38,7 +38,7 @@ You'll need to manually copy `libobs` `data` from obs
 
 # TODO:
 
-- [] Build scripts
+- [] Build scripts (`build-scripts`)
 - [] Automatic packaging
 - [] Linux: Avoid Conflicts with OBS (maybe package in /opt?)
 - [] Configuration in a file
