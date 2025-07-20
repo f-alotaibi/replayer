@@ -26,9 +26,14 @@ if(WIN32)
 else()
     set(LIBOBS_LIB "${OBS_DIR}/build-linux/rundir/RelWithDebInfo/lib/libobs.so.30")
     set_target_properties(replayer PROPERTIES
-        BUILD_RPATH "${OBS_DIR}/build-linux/rundir/RelWithDebInfo/lib"
-        INSTALL_RPATH "$ORIGIN/../lib/replayer/"
+        INSTALL_RPATH "$ORIGIN/../lib/"
     )
+endif()
+
+if(WIN32)
+else()
+    set(CMAKE_INSTALL_PREFIX "/opt/replayer")
+    install(FILES replayer-bootstrap DESTINATION bin/)
 endif()
 
 target_link_libraries(replayer PRIVATE ${LIBOBS_LIB} uiohook)

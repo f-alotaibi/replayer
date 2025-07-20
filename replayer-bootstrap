@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export LD_LIBRARY_PATH=/opt/replayer/lib
+/opt/replayer/bin/replayer
