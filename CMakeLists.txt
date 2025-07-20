@@ -12,7 +12,7 @@ elseif (UNIX)
     set(PLATFORM_SRC platform_x11.h platform_x11.cpp)
     add_definitions(-DPLATFORM_LINUX)
 endif()
-add_executable(replayer platform.h ${PLATFORM_SRC} replay.h replay.cpp main.cpp)
+add_executable(replayer platform.h ${PLATFORM_SRC} encoder.h encoder.cpp replay.h replay.cpp main.cpp)
 
 set(OBS_DIR "${CMAKE_SOURCE_DIR}/external/obs-studio")
 

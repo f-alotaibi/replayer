@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 
+#include "encoder.h"
 #include "replay.h"
 
 #ifdef PLATFORM_LINUX
@@ -111,27 +112,17 @@ bool Replay::init() {
     vec2 pos{ 0,0 };
     obs_sceneitem_set_pos(monitorItem, &pos);
  
-    this->m_videoEncoder = obs_video_encoder_create("obs_x264", "enc_obs_x264", nullptr, nullptr);
+    this->m_videoEncoder = Encoder::createVideoEncoder();
     if (!this->m_videoEncoder) {
         std::cout << "Failed to create obs_x264 encoder. Is the plugin available?" << std::endl;
         return false;
     }
 
-    obs_data_t* encVideoOpt = obs_data_create();
-    obs_data_set_int(encVideoOpt, "bitrate", 2500);
-    obs_data_set_bool(encVideoOpt, "use_bufsize", false);
-    obs_data_set_string(encVideoOpt, "rate_control", "CBR");
-    obs_data_set_string(encVideoOpt, "profile", "");
-    obs_data_set_string(encVideoOpt, "preset", "veryfast");
-    obs_encoder_update(this->m_videoEncoder, encVideoOpt);
-    obs_data_release(encVideoOpt);
- 
-    this->m_audioEncoder = obs_audio_encoder_create("ffmpeg_aac", "audio_encoder", nullptr, 0, nullptr);
+    this->m_audioEncoder = Encoder::createAudioEncoder();
     if (!this->m_audioEncoder) {
         std::cout << "Failed to create ffmpeg_aac encoder. Is the plugin available?" << std::endl;
         return false;
     }
-
 
     obs_data_t *outputOpt = obs_data_create();
     std::cout << "Directory" << std::endl;
