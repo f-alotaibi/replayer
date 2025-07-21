@@ -27,6 +27,8 @@ static std::vector<screen_info> getConnectedMonitors() {
         info.id = i;
         info.width = screen->width;
         info.height = screen->height;
+
+        monitors.push_back(info);
     }
 
     XCloseDisplay(display);
