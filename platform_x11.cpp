@@ -1,6 +1,7 @@
 #include "platform_x11.h"
-#include <iostream>
 #include <vector>
+
+#include <cstdlib>
 #include <X11/Xlib.h>
 
 
@@ -114,4 +115,8 @@ obs_video_info X11ReplayPlatform::getVideoInfo() const {
     ovi.gpu_conversion = true;
 
     return ovi;
+}
+
+std::string X11ReplayPlatform::getDefaultReplayFolder() const {
+    return std::string(getenv("HOME")) + "/Videos/Replays";
 }

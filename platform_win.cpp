@@ -1,8 +1,8 @@
-#include <iostream>
-#include <vector>
 #include "platform_win.h"
-#include <windows.h>
+#include <vector>
 
+#include <windows.h>
+#include <shlobj.h>
 
 struct screen_info {
     std::string monitor_id; // e.g., "\\?\DISPLAY#GSM5C19#..."
@@ -124,4 +124,15 @@ obs_video_info WindowsReplayPlatform::getVideoInfo() const {
     ovi.gpu_conversion = true;
 
     return ovi;
+}
+
+std::string WindowsReplayPlatform::getDefaultReplayFolder() const {
+    char videosPath[MAX_PATH];
+    char replaysPath[MAX_PATH];
+    
+	SHGetFolderPathA(NULL, CSIDL_MYVIDEO, NULL, SHGFP_TYPE_CURRENT, videosPath);
+
+    snprintf(replaysPath, MAX_PATH, "%s\\Replays", videosPath);
+    
+    return std::string(replaysPath);
 }

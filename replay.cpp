@@ -125,16 +125,8 @@ bool Replay::init() {
     }
 
     obs_data_t *outputOpt = obs_data_create();
-    std::cout << "Directory" << std::endl;
-    #ifdef PLATFORM_LINUX
-    std::cout << "Linux" << std::endl;
-    obs_data_set_string(outputOpt, "directory", "~/Videos/Replays");
-    #endif
-    #ifdef PLATFORM_WINDOWS
-    std::cout << "Windows" << std::endl;
-    obs_data_set_string(outputOpt, "directory", "C:/Users/Administrator/Videos/Replays");
-    #endif
 
+    obs_data_set_string(outputOpt, "directory", this->m_ReplayPlatform->getDefaultReplayFolder().c_str());
     obs_data_set_string(outputOpt, "format", "Replay_%CCYY-%MM-%DD_%hh-%mm-%ss");
     obs_data_set_string(outputOpt, "extension", "mp4");
     obs_data_set_int(outputOpt, "max_time_sec", 30);
