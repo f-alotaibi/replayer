@@ -3,6 +3,7 @@
 
 #include "encoder.h"
 #include "replay.h"
+#include "hud.h"
 
 #ifdef PLATFORM_LINUX
 #include "platform_x11.h"
@@ -21,6 +22,7 @@ void Replay::handle_hook_event(uiohook_event *const event) {
         case EVENT_KEY_PRESSED:
             if (event->data.keyboard.keycode == VC_F9 && (event->mask & MASK_ALT)) {
                 Replay::instance->save();
+                QMetaObject::invokeMethod(OverlayHUD::instance(), "show", Qt::QueuedConnection);
             }
             break;
         default:

@@ -3,20 +3,33 @@
 #include <chrono>
 #include <iostream>
 #include "replay.h"
+#include "hud.h"
 #include <uiohook.h>
 
-int main() {
-    Replay replay = Replay();
-    if (!replay.init()) {
-        std::cout << "Could not init replay" << std::endl;
+#include <QApplication>
+
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
+
+    auto lambdaReplay = []() {
+        Replay replay = Replay();
+        if (!replay.init()) {
+            std::cout << "Could not init replay" << std::endl;
+        }
+        replay.start();
+        while (true) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
     };
-    replay.start();
+
+    // Ensure hud is created b4 thread
+    OverlayHUD::instance();
     
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+    std::thread replayThread(lambdaReplay);
 
-    replay.stop();
+    int result = a.exec();    
 
-    return 0;
+    replayThread.join();
+
+    return result;
 }

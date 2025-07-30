@@ -3,6 +3,7 @@ project(replayer_project)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 add_subdirectory(external/libuiohook)
 
 if (WIN32)
@@ -12,7 +13,8 @@ elseif (UNIX)
     set(PLATFORM_SRC platform_x11.h platform_x11.cpp)
     add_definitions(-DPLATFORM_LINUX)
 endif()
-add_executable(replayer platform.h ${PLATFORM_SRC} encoder.h encoder.cpp replay.h replay.cpp main.cpp)
+
+add_executable(replayer platform.h ${PLATFORM_SRC} encoder.h encoder.cpp hud.h hud.cpp replay.h replay.cpp main.cpp)
 
 set(OBS_DIR "${CMAKE_SOURCE_DIR}/external/obs-studio")
 
@@ -36,6 +38,6 @@ else()
     install(FILES replayer-bootstrap DESTINATION bin/)
 endif()
 
-target_link_libraries(replayer PRIVATE ${LIBOBS_LIB} uiohook)
+target_link_libraries(replayer PRIVATE ${LIBOBS_LIB} uiohook Qt6::Widgets)
 
 install(TARGETS replayer RUNTIME)
