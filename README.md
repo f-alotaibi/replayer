@@ -42,5 +42,5 @@ You'll need to manually copy `libobs` `data` from obs
 - [ ] Automatic packaging
 - [x] Linux: Avoid Conflicts with OBS (packaged in /opt/replayer)
 - [ ] Configuration in a file
-- [ ] Figure out why `libobs-d3d11` doesn't work with Replayer (Currently switched to `libobs-opengl`)
+- [x] Figure out why `libobs-d3d11` doesn't work with Replayer (fixed by an obs update?)
 - [x] Automatically find display resolution in X11

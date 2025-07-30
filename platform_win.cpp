@@ -115,7 +115,7 @@ obs_video_info WindowsReplayPlatform::getVideoInfo() const {
     }
 
     ovi.adapter = 0;
-    ovi.graphics_module = "libobs-opengl";
+    ovi.graphics_module = "libobs-d3d11";
     ovi.base_width = display.width;
     ovi.base_height = display.height;
     ovi.output_width = display.width;
