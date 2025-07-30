@@ -32,7 +32,12 @@ static std::vector<screen_info> getConnectedMonitors() {
 
             screen_info info;
 
-            info.monitor_id = monitor.DeviceID;
+            // Convert WCHAR to std::string
+            int bSize = WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, NULL, 0, NULL, NULL);
+            std::string nString(bSize, '\0');
+            WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, &nString[0], bSize, NULL, NULL);
+
+            info.monitor_id = nString;
 
             DEVMODE devMode = {};
             devMode.dmSize = sizeof(DEVMODE);
