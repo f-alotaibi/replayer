@@ -12,6 +12,8 @@
 #include "platform_win.h"
 #endif
 
+#include "config.h"
+
 Replay* Replay::instance = nullptr;
 
 Replay::Replay() {
@@ -128,11 +130,13 @@ bool Replay::init() {
 
     obs_data_t *outputOpt = obs_data_create();
 
-    obs_data_set_string(outputOpt, "directory", this->m_ReplayPlatform->getDefaultReplayFolder().c_str());
-    obs_data_set_string(outputOpt, "format", "Replay_%CCYY-%MM-%DD_%hh-%mm-%ss");
-    obs_data_set_string(outputOpt, "extension", "mp4");
-    obs_data_set_int(outputOpt, "max_time_sec", 30);
-    obs_data_set_bool(outputOpt, "allow_spaces", true);
+    ReplaySettings *config = ReplaySettings::instance();
+
+    obs_data_set_string(outputOpt, "directory", config->m_directory.toStdString().c_str());
+    obs_data_set_string(outputOpt, "format", config->m_format.toStdString().c_str());
+    obs_data_set_string(outputOpt, "extension", config->m_extension.toStdString().c_str());
+    obs_data_set_int(outputOpt, "max_time_sec", config->m_maxTimeSeconds);
+
     this->m_output = obs_output_create("replay_buffer", "ReplayBuffer", outputOpt, nullptr);
     if (!this->m_output) {
         std::cout << "Failed to create replay_buffer!" << std::endl;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include "replay.h"
 #include "hud.h"
+#include "config.h"
 #include <uiohook.h>
 
 #include <QApplication>
@@ -22,6 +23,7 @@ int main(int argc, char *argv[]) {
         }
     };
 
+    ReplaySettings::instance();
     // Ensure hud is created b4 thread
     OverlayHUD::instance();
     
