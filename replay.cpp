@@ -4,14 +4,7 @@
 #include "encoder.h"
 #include "replay.h"
 #include "hud.h"
-
-#ifdef PLATFORM_LINUX
-#include "platform_x11.h"
-#endif
-#ifdef PLATFORM_WINDOWS
-#include "platform_win.h"
-#endif
-
+#include "platform.h"
 #include "config.h"
 
 Replay* Replay::instance = nullptr;
@@ -51,12 +44,7 @@ bool Replay::init() {
         return false;
     }
 
-    #ifdef PLATFORM_LINUX
-    this->m_ReplayPlatform = new X11ReplayPlatform();
-    #endif
-    #ifdef PLATFORM_WINDOWS
-    this->m_ReplayPlatform = new WindowsReplayPlatform();
-    #endif
+    this->m_ReplayPlatform = ReplayPlatform::instance(nullptr);
 
     obs_video_info ovi = this->m_ReplayPlatform->getVideoInfo();
  

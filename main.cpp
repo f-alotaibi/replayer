@@ -9,6 +9,13 @@
 
 #include <QApplication>
 
+#ifdef PLATFORM_LINUX
+#include "platform_x11.h"
+#endif
+#ifdef PLATFORM_WINDOWS
+#include "platform_win.h"
+#endif
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
@@ -23,7 +30,16 @@ int main(int argc, char *argv[]) {
         }
     };
 
-    ReplaySettings::instance();
+    ReplayPlatform *platformInstance;
+    #ifdef PLATFORM_LINUX
+    platformInstance = new X11ReplayPlatform();
+    #endif
+    #ifdef PLATFORM_WINDOWS
+    platformInstance = new WindowsReplayPlatform();
+    #endif
+
+    ReplayPlatform::instance(platformInstance);
+
     // Ensure hud is created b4 thread
     OverlayHUD::instance();
     

@@ -3,24 +3,12 @@
 #include <QSettings>
 
 #include "platform.h"
-#ifdef PLATFORM_LINUX
-#include "platform_x11.h"
-#endif
-#ifdef PLATFORM_WINDOWS
-#include "platform_win.h"
-#endif
 
 
 class ReplaySettings {
     public:
         ReplaySettings() {
-            ReplayPlatform *platform;
-            #ifdef PLATFORM_LINUX
-            platform = new X11ReplayPlatform();
-            #endif
-            #ifdef PLATFORM_WINDOWS
-            platform = new WindowsReplayPlatform();
-            #endif
+            ReplayPlatform *platform = ReplayPlatform::instance(nullptr);
 
             this->m_settings = new QSettings("Replayer", "Replayer");
             this->m_settings->beginGroup("General");
