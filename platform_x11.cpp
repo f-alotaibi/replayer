@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <X11/Xlib.h>
 
+#include "config.h"
+
 
 struct screen_info {
     int id;
@@ -100,13 +102,15 @@ obs_video_info X11ReplayPlatform::getVideoInfo() const {
         return ovi;
     }
 
+    ReplaySettings *config = ReplaySettings::instance();
+
     ovi.adapter = 0;
     ovi.graphics_module = "libobs-opengl";
     ovi.base_width = display.width;
     ovi.base_height = display.height;
     ovi.output_width = display.width;
     ovi.output_height = display.height;
-    ovi.fps_num = 30;
+    ovi.fps_num = config->m_framerate;
     ovi.fps_den = 1;
     ovi.scale_type = OBS_SCALE_BICUBIC;
     ovi.colorspace = VIDEO_CS_709;
