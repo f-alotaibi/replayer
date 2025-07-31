@@ -1,3 +1,5 @@
+#pragma once
+
 #include <obs.h>
 #include "platform.h"
 
