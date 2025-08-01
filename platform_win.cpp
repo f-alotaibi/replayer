@@ -5,15 +5,10 @@
 #include <shlobj.h>
 
 #include "config.h"
+#include "display.h"
 
-struct screen_info {
-    std::string monitor_id; // e.g., "\\?\DISPLAY#GSM5C19#..."
-    int width;
-    int height;
-};
-
-static std::vector<screen_info> getConnectedMonitors() {
-    std::vector<screen_info> monitors;
+static std::vector<Display> getConnectedMonitors() {
+    std::vector<Display> monitors;
 
     DISPLAY_DEVICE adapter = {0};
     adapter.cb = sizeof(DISPLAY_DEVICE);
@@ -32,14 +27,14 @@ static std::vector<screen_info> getConnectedMonitors() {
             if (!(monitor.StateFlags & DISPLAY_DEVICE_ACTIVE))
                 continue;
 
-            screen_info info;
+            Display info;
 
             // Convert WCHAR to std::string
             int bSize = WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, NULL, 0, NULL, NULL);
             std::string nString(bSize, '\0');
             WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, &nString[0], bSize, NULL, NULL);
 
-            info.monitor_id = nString;
+            info.id = nString;
 
             DEVMODE devMode = {};
             devMode.dmSize = sizeof(DEVMODE);
@@ -61,15 +56,15 @@ static std::vector<screen_info> getConnectedMonitors() {
 obs_source_t* WindowsReplayPlatform::getVideoCaptureSource() const {
     obs_data_t *monitorOpt = obs_data_create();
 
-    std::vector<screen_info> screens = getConnectedMonitors();
+    std::vector<Display> screens = getConnectedMonitors();
     if (screens.empty()) {
         obs_data_release(monitorOpt);
         return nullptr;
     }
-    screen_info display = screens[0];
+    Display display = screens[0];
 
     obs_data_set_bool(monitorOpt, "capture_cursor", true);
-    obs_data_set_string(monitorOpt, "monitor_id", display.monitor_id.c_str());
+    obs_data_set_string(monitorOpt, "monitor_id", display.id.c_str());
     
     obs_source_t *screenCapture = obs_source_create("monitor_capture", "Capture", monitorOpt, nullptr);
     if (!screenCapture) {
@@ -106,12 +101,12 @@ obs_source_t* WindowsReplayPlatform::getAudioInputSource() const {
 obs_video_info WindowsReplayPlatform::getVideoInfo() const {
     obs_video_info ovi = {};
 
-    std::vector<screen_info> screens = getConnectedMonitors();
+    std::vector<Display> screens = getConnectedMonitors();
     if (screens.empty()) {
         return ovi;
     }
 
-    screen_info display = screens[0];
+    Display display = screens[0];
     if (display.width == 0 || display.height == 0) {
         return ovi;
     }

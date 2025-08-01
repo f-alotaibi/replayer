@@ -5,16 +5,10 @@
 #include <X11/Xlib.h>
 
 #include "config.h"
+#include "display.h"
 
-
-struct screen_info {
-    int id;
-    int width;
-    int height;
-};
-
-static std::vector<screen_info> getConnectedMonitors() {
-    std::vector<screen_info> monitors;
+static std::vector<Display> getConnectedMonitors() {
+    std::vector<Display> monitors;
 
     Display *display;
     Screen *screen;
@@ -25,9 +19,9 @@ static std::vector<screen_info> getConnectedMonitors() {
 
     for (int i = 0; i < count_screens; ++i) {
         screen = ScreenOfDisplay(display, i);
-        screen_info info;
+        Display info;
 
-        info.id = i;
+        info.id = "";
         info.width = screen->width;
         info.height = screen->height;
 
@@ -42,14 +36,14 @@ static std::vector<screen_info> getConnectedMonitors() {
 obs_source_t* X11ReplayPlatform::getVideoCaptureSource() const {
     obs_data_t *monitorOpt = obs_data_create();
 
-    std::vector<screen_info> screens = getConnectedMonitors();
+    std::vector<Display> screens = getConnectedMonitors();
     if (screens.empty()) {
         obs_data_release(monitorOpt);
         return nullptr;
     }
-    screen_info display = screens[0];
+    Display display = screens[0];
 
-    obs_data_set_int(monitorOpt, "screen", display.id);
+    obs_data_set_int(monitorOpt, "screen", 0);
     obs_data_set_bool(monitorOpt, "show_cursor", true);
     obs_data_set_bool(monitorOpt, "advanced", false);
     obs_data_set_int(monitorOpt, "cut_top", 0);
@@ -92,12 +86,12 @@ obs_source_t* X11ReplayPlatform::getAudioInputSource() const {
 obs_video_info X11ReplayPlatform::getVideoInfo() const {
     obs_video_info ovi = {};
 
-    std::vector<screen_info> screens = getConnectedMonitors();
+    std::vector<Display> screens = getConnectedMonitors();
     if (screens.empty()) {
         return ovi;
     }
 
-    screen_info display = screens[0];
+    Display display = screens[0];
     if (display.width == 0 || display.height == 0) {
         return ovi;
     }

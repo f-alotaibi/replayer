@@ -14,7 +14,7 @@ elseif (UNIX)
     add_definitions(-DPLATFORM_LINUX)
 endif()
 
-add_executable(replayer platform.h ${PLATFORM_SRC} encoder.h encoder.cpp hud.h hud.cpp config.h replay.h replay.cpp main.cpp)
+add_executable(replayer display.h platform.h ${PLATFORM_SRC} encoder.h encoder.cpp hud.h hud.cpp config.h replay.h replay.cpp main.cpp)
 
 set(OBS_DIR "${CMAKE_SOURCE_DIR}/external/obs-studio")
 
