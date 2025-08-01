@@ -1,62 +1,14 @@
 #include "platform_win.h"
-#include <vector>
 
 #include <windows.h>
 #include <shlobj.h>
 
 #include "config.h"
-#include "display.h"
-
-static std::vector<Display> getConnectedMonitors() {
-    std::vector<Display> monitors;
-
-    DISPLAY_DEVICE adapter = {0};
-    adapter.cb = sizeof(DISPLAY_DEVICE);
-    int adapterIndex = 0;
-
-    while (EnumDisplayDevices(NULL, adapterIndex++, &adapter, 0)) {
-        // Only interested in active adapters
-        if (!(adapter.StateFlags & DISPLAY_DEVICE_ACTIVE))
-            continue;
-
-        DISPLAY_DEVICE monitor = {0};
-        monitor.cb = sizeof(DISPLAY_DEVICE);
-        int monitorIndex = 0;
-
-        while (EnumDisplayDevices(adapter.DeviceName, monitorIndex++, &monitor, EDD_GET_DEVICE_INTERFACE_NAME)) {
-            if (!(monitor.StateFlags & DISPLAY_DEVICE_ACTIVE))
-                continue;
-
-            Display info;
-
-            // Convert WCHAR to std::string
-            int bSize = WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, NULL, 0, NULL, NULL);
-            std::string nString(bSize, '\0');
-            WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, &nString[0], bSize, NULL, NULL);
-
-            info.id = nString;
-
-            DEVMODE devMode = {};
-            devMode.dmSize = sizeof(DEVMODE);
-            if (EnumDisplaySettings(adapter.DeviceName, ENUM_CURRENT_SETTINGS, &devMode)) {
-                info.width = devMode.dmPelsWidth;
-                info.height = devMode.dmPelsHeight;
-            } else {
-                info.width = 0;
-                info.height = 0;
-            }
-
-            monitors.push_back(info);
-        }
-    }
-
-    return monitors;
-}
 
 obs_source_t* WindowsReplayPlatform::getVideoCaptureSource() const {
     obs_data_t *monitorOpt = obs_data_create();
 
-    std::vector<Display> screens = getConnectedMonitors();
+    std::vector<Display> screens = this->getConnectedMonitors();
     if (screens.empty()) {
         obs_data_release(monitorOpt);
         return nullptr;
@@ -101,7 +53,7 @@ obs_source_t* WindowsReplayPlatform::getAudioInputSource() const {
 obs_video_info WindowsReplayPlatform::getVideoInfo() const {
     obs_video_info ovi = {};
 
-    std::vector<Display> screens = getConnectedMonitors();
+    std::vector<Display> screens = this->getConnectedMonitors();
     if (screens.empty()) {
         return ovi;
     }
@@ -139,4 +91,50 @@ std::string WindowsReplayPlatform::getDefaultReplayFolder() const {
     snprintf(replaysPath, MAX_PATH, "%s\\Replays", videosPath);
     
     return std::string(replaysPath);
+}
+
+std::vector<Display> WindowsReplayPlatform::getConnectedMonitors() const {
+    std::vector<Display> monitors;
+
+    DISPLAY_DEVICE adapter = {0};
+    adapter.cb = sizeof(DISPLAY_DEVICE);
+    int adapterIndex = 0;
+
+    while (EnumDisplayDevices(NULL, adapterIndex++, &adapter, 0)) {
+        // Only interested in active adapters
+        if (!(adapter.StateFlags & DISPLAY_DEVICE_ACTIVE))
+            continue;
+
+        DISPLAY_DEVICE monitor = {0};
+        monitor.cb = sizeof(DISPLAY_DEVICE);
+        int monitorIndex = 0;
+
+        while (EnumDisplayDevices(adapter.DeviceName, monitorIndex++, &monitor, EDD_GET_DEVICE_INTERFACE_NAME)) {
+            if (!(monitor.StateFlags & DISPLAY_DEVICE_ACTIVE))
+                continue;
+
+            Display info;
+
+            // Convert WCHAR to std::string
+            int bSize = WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, NULL, 0, NULL, NULL);
+            std::string nString(bSize, '\0');
+            WideCharToMultiByte(CP_ACP, 0, monitor.DeviceID, -1, &nString[0], bSize, NULL, NULL);
+
+            info.id = nString;
+
+            DEVMODE devMode = {};
+            devMode.dmSize = sizeof(DEVMODE);
+            if (EnumDisplaySettings(adapter.DeviceName, ENUM_CURRENT_SETTINGS, &devMode)) {
+                info.width = devMode.dmPelsWidth;
+                info.height = devMode.dmPelsHeight;
+            } else {
+                info.width = 0;
+                info.height = 0;
+            }
+
+            monitors.push_back(info);
+        }
+    }
+
+    return monitors;
 }

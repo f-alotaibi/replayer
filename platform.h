@@ -2,6 +2,9 @@
 #include <obs.h>
 
 #include <string>
+#include <vector>
+
+#include "display.h"
 
 class ReplayPlatform {
     public:
@@ -10,6 +13,7 @@ class ReplayPlatform {
         virtual obs_source_t* getAudioInputSource() const = 0;
         virtual obs_video_info getVideoInfo() const = 0;
         virtual std::string getDefaultReplayFolder() const = 0;
+        virtual std::vector<Display> getConnectedMonitors() const = 0;
         static ReplayPlatform* instance(ReplayPlatform *_instance) {
             static ReplayPlatform* instance;
             if (_instance != nullptr) {

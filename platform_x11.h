@@ -10,4 +10,5 @@ class X11ReplayPlatform : public ReplayPlatform {
         obs_source_t* getAudioInputSource() const override;
         obs_video_info getVideoInfo() const override;
         std::string getDefaultReplayFolder() const override;
+        std::vector<Display> getConnectedMonitors() const override;
 };

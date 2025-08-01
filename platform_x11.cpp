@@ -1,42 +1,14 @@
 #include "platform_x11.h"
-#include <vector>
 
 #include <cstdlib>
 #include <X11/Xlib.h>
 
 #include "config.h"
-#include "display.h"
-
-static std::vector<Display> getConnectedMonitors() {
-    std::vector<Display> monitors;
-
-    Display *display;
-    Screen *screen;
-
-    display = XOpenDisplay(NULL);
-
-    int count_screens = ScreenCount(display);
-
-    for (int i = 0; i < count_screens; ++i) {
-        screen = ScreenOfDisplay(display, i);
-        Display info;
-
-        info.id = "";
-        info.width = screen->width;
-        info.height = screen->height;
-
-        monitors.push_back(info);
-    }
-
-    XCloseDisplay(display);
-
-    return monitors;
-}
 
 obs_source_t* X11ReplayPlatform::getVideoCaptureSource() const {
     obs_data_t *monitorOpt = obs_data_create();
 
-    std::vector<Display> screens = getConnectedMonitors();
+    std::vector<Display> screens = this->getConnectedMonitors();
     if (screens.empty()) {
         obs_data_release(monitorOpt);
         return nullptr;
@@ -86,7 +58,7 @@ obs_source_t* X11ReplayPlatform::getAudioInputSource() const {
 obs_video_info X11ReplayPlatform::getVideoInfo() const {
     obs_video_info ovi = {};
 
-    std::vector<Display> screens = getConnectedMonitors();
+    std::vector<Display> screens = this->getConnectedMonitors();
     if (screens.empty()) {
         return ovi;
     }
@@ -117,4 +89,30 @@ obs_video_info X11ReplayPlatform::getVideoInfo() const {
 
 std::string X11ReplayPlatform::getDefaultReplayFolder() const {
     return std::string(getenv("HOME")) + "/Videos/Replays";
+}
+
+std::vector<Display> X11ReplayPlatform::getConnectedMonitors() const {
+    std::vector<Display> monitors;
+
+    Display *display;
+    Screen *screen;
+
+    display = XOpenDisplay(NULL);
+
+    int count_screens = ScreenCount(display);
+
+    for (int i = 0; i < count_screens; ++i) {
+        screen = ScreenOfDisplay(display, i);
+        Display info;
+
+        info.id = "";
+        info.width = screen->width;
+        info.height = screen->height;
+
+        monitors.push_back(info);
+    }
+
+    XCloseDisplay(display);
+
+    return monitors;
 }
