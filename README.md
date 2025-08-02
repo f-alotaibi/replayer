@@ -41,6 +41,6 @@ You'll need to manually copy `libobs` `data` from obs
 - [x] Build scripts (`build-scripts`)
 - [ ] Automatic packaging
 - [x] Linux: Avoid Conflicts with OBS (packaged in /opt/replayer)
-- [ ] Configuration in a file
+- [x] Configuration in a file (Default [QSettings](https://doc.qt.io/qt-6/qsettings.html#platform-specific-notes) behaviour)
 - [x] Figure out why `libobs-d3d11` doesn't work with Replayer (fixed by an obs update?)
 - [x] Automatically find display resolution in X11
