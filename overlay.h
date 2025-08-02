@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QCheckbox>
 
 class OverlayMenu : public QWidget {
     public:
@@ -19,4 +20,5 @@ class OverlayMenu : public QWidget {
         QComboBox* m_formatCombo;
         QLineEdit* m_filenameEdit;
         QSpinBox* m_frameSpin;
+        QCheckBox* m_hardwareEncoderCheckBox;
 };

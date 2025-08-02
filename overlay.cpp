@@ -68,6 +68,11 @@ OverlayMenu::OverlayMenu() {
 
     formLayout->addRow("FPS:", m_frameSpin);
 
+    m_hardwareEncoderCheckBox = new QCheckBox(settingsBox);
+    m_hardwareEncoderCheckBox->setChecked(settings->m_enableHardwareEncoders);
+
+    formLayout->addRow("Enable Hardware Encoders:", m_hardwareEncoderCheckBox);
+
     auto save = new QPushButton("Save");
     connect(save, &QPushButton::clicked, this, [this] {
         ReplaySettings *settings = ReplaySettings::instance();
@@ -76,6 +81,7 @@ OverlayMenu::OverlayMenu() {
         settings->m_extension = this->m_formatCombo->currentText();
         settings->m_format = this->m_filenameEdit->text();
         settings->m_framerate = this->m_frameSpin->value();
+        settings->m_enableHardwareEncoders = this->m_hardwareEncoderCheckBox->isChecked();
 
         settings->Save();
         this->close();
