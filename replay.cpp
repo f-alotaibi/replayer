@@ -16,10 +16,10 @@ Replay::Replay() {
 void Replay::handle_hook_event(uiohook_event *const event) {
     switch (event->type) {
         case EVENT_KEY_PRESSED:
-            if (event->data.keyboard.keycode == VC_F9 && (event->mask & MASK_ALT)) {
+            if (event->data.keyboard.keycode == VC_F9 && (event->mask & MASK_ALT_L)) {
                 Replay::instance->save();
                 QMetaObject::invokeMethod(OverlayHUD::instance(), "show", Qt::QueuedConnection);
-            } else if (event->data.keyboard.keycode == VC_Z && (event->mask & MASK_ALT)) {
+            } else if (event->data.keyboard.keycode == VC_Z && (event->mask & MASK_ALT_L)) {
                 QMetaObject::invokeMethod(OverlayMenu::instance(), "show", Qt::QueuedConnection);
             }
             break;
