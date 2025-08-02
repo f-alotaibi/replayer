@@ -4,6 +4,7 @@
 #include <iostream>
 #include "replay.h"
 #include "hud.h"
+#include "overlay.h"
 #include "config.h"
 #include <uiohook.h>
 
@@ -41,8 +42,9 @@ int main(int argc, char *argv[]) {
     ReplayPlatform::instance(platformInstance);
 
     // Ensure hud is created b4 thread
+    OverlayMenu::instance();
     OverlayHUD::instance();
-    
+
     std::thread replayThread(lambdaReplay);
 
     int result = a.exec();    

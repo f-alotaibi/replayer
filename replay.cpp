@@ -6,6 +6,7 @@
 #include "hud.h"
 #include "platform.h"
 #include "config.h"
+#include "overlay.h"
 
 Replay* Replay::instance = nullptr;
 
@@ -18,6 +19,8 @@ void Replay::handle_hook_event(uiohook_event *const event) {
             if (event->data.keyboard.keycode == VC_F9 && (event->mask & MASK_ALT)) {
                 Replay::instance->save();
                 QMetaObject::invokeMethod(OverlayHUD::instance(), "show", Qt::QueuedConnection);
+            } else if (event->data.keyboard.keycode == VC_Z && (event->mask & MASK_ALT)) {
+                QMetaObject::invokeMethod(OverlayMenu::instance(), "show", Qt::QueuedConnection);
             }
             break;
         default:
