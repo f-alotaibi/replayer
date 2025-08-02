@@ -87,9 +87,12 @@ OverlayMenu::OverlayMenu() {
     QLabel *label = new QLabel("Overlay Settings", settingsBox);
     label->setStyleSheet("color: white; font-size: 16px;");
 
+    QLabel *noteLabel = new QLabel("Note: You have to restart the appliaction in order for options to apply", settingsBox);
+    noteLabel->setStyleSheet("color: white; font-size: 12px;");
 
     settingsLayout->addWidget(label);
     settingsLayout->addLayout(formLayout);
+    settingsLayout->addWidget(noteLabel);
 
     auto centerLayout = new QHBoxLayout();
     centerLayout->addStretch();
